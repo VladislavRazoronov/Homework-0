@@ -20,7 +20,10 @@ def parse_file(filename):
             if nutrient['title'] == 'Protein':
                 nutrients['Protein'] = nutrient['amount']
         ingredients = el['nutrition']['ingredients']
-        result.append((el['title'], nutrients, ingredients))
+        ingred = []
+        for ingredient in ingredients:
+            ingred.append((ingredient['name'], ingredient['amount'], ingredient['unit']))
+        result.append((el['title'], nutrients, ingred))
     return result
 
 if __name__ == "__main__":
