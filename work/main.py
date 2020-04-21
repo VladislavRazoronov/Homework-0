@@ -7,9 +7,9 @@ def find_ingredients():
             ' and maximum calories separated by space: ').split())
         except:
             print('Invalid format, please enter again')
-    ingred = imput('Please enter prefered ingredients, leave blank to'+\
+    ingred = input('Please enter prefered ingredients, leave blank to'+\
     'search without selected ingredient')
-    if ingred = '':
+    if ingred == '':
         ingred = None
     file = f'resources{max_calories}-{min_calories}.txt'
     try:
