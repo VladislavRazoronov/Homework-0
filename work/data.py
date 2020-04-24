@@ -23,6 +23,10 @@ def get_data(maxcal, mincal, ingredients=None):
     return f'resources{maxcal}-{mincal}.txt'
 
 def parse_information(filepath):
+    """
+    Parses data in given file and returns a list with
+    needed data
+    """
     with open(filepath) as file:
         resource = json.load(file)['results']
     result = []
@@ -41,6 +45,18 @@ def parse_information(filepath):
         ingredients = el['nutrition']['ingredients']
         ingred = []
         for ingredient in ingredients:
-            ingred.append((ingredient['name'], ingredient['amount'], ingredient['unit']))
-        result.append((el['title'], nutrients, ingred))
+            temp = el['nutrients']
+            ingr_nutrients = {}
+            for nutrient in temp:
+                if nutrient['title'] == 'Calories':
+                    ingr_nutrients['Calories'] = nutrient['amount']
+                elif nutrient['title'] == 'Fat':
+                    ingr_nutrients['Fat'] = nutrient['amount']
+                elif nutrient['title'] == 'Carbohydrates':
+                    ingr_nutrients['Carbohydrates'] = nutrient['amount']
+                elif nutrient['title'] == 'Protein':
+                    ingr_nutrients['Protein'] = nutrient['amount']
+            ingred.append((ingredient['name'], ingredient['amount'], \
+            ingredient['unit'], ingr_nutrients))
+        result.append((el['title'], nutrients, ingred, el['sourceUrl']))
     return result

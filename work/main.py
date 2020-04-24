@@ -17,6 +17,7 @@ def find_ingredients():
     except:
         file = get_data(max_calories, min_calories, ingred)
         recipes = parse_information(file)
+    
 
 if __name__ == "__main__":
     find_ingredients()
