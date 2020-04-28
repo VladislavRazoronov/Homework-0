@@ -10,6 +10,12 @@ class Food:
         self.proteins = prot
         self.fat = fat
 
+    def set_name(self, name):
+        """
+        Set food name
+        """
+        self.name = name
+
     def set_calories(self, calories):
         """
         Set food calories to given number
@@ -42,11 +48,15 @@ class Recipe(Food):
     """
     def __init__(self, name, cal, carb, prot, fat, ingred, link):
         super().__init__(name, cal, carb, prot, fat)
-        self.ingredients = ingred
+        self.ingredients = set(ingred)
         self.link = link
     
     def __hash__(self):
         return ord(self.name) + ord(self.calories) + ord(self.link) 
+    
+    def add_ingredient(self, ingredient):
+        self.ingredients.add(ingredient)
+
 
 class Ingredient(Food):
     """
@@ -55,4 +65,10 @@ class Ingredient(Food):
     """
     def __init__(self, name, cal, carb, prot, fat, recipes):
         super().__init__(name, cal, carb, prot, fat)
-        self.recipes = recipes
+        self.recipes = set(recipes)
+    
+    def __hash__(self):
+        return ord(self.name) + ord(self.calories)
+    
+    def add_recipe(self, recipe):
+        self.recipes.add(recipe)
