@@ -48,14 +48,14 @@ class Recipe(Food):
     """
     def __init__(self, name, cal, carb, prot, fat, ingred, link):
         super().__init__(name, cal, carb, prot, fat)
-        self.ingredients = set(ingred)
+        self.ingredients = ingred
         self.link = link
     
     def __hash__(self):
         return ord(self.name) + ord(self.calories) + ord(self.link) 
     
-    def add_ingredient(self, ingredient):
-        self.ingredients.add(ingredient)
+    def add_ingredient(self, ingredient, value, units):
+        self.ingredients[ingredient] = (value, units)
 
 
 class Ingredient(Food):
