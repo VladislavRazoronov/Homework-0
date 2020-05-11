@@ -39,6 +39,13 @@ class Food:
         Set food fat to given number
         """
         self.fat = fat
+    
+    def __eq__(self, other):
+        return self.name == other.name and self.calories == other.calories
+    
+    def __str__(self):
+        return f'{self.name} has {self.calories} calories, {self.carbohydrates}' +\
+        f'g. carbohydrates, {self.fat}g. of fat and {self.proteins}g. of proteins'
 
 
 class Recipe(Food):
@@ -56,7 +63,9 @@ class Recipe(Food):
     
     def add_ingredient(self, ingredient, value, units):
         self.ingredients[ingredient] = (value, units)
-
+    
+    def find_ingredient(self, ingredient):
+        return self.ingredients[ingredient]
 
 class Ingredient(Food):
     """
@@ -72,3 +81,11 @@ class Ingredient(Food):
     
     def add_recipe(self, recipe):
         self.recipes.add(recipe)
+    
+    def calculate_total_amount(self):
+        total = 0.0
+        for recipe in self.recipes:
+            data = recipe.find_ingredient(self)
+            total += data[0]
+            unit = data[1]
+        return (total, unit)
