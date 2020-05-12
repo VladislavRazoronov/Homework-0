@@ -1,46 +1,50 @@
-class AbstractFoodClass:
+class AbstractFood:
     """
-    Abstract class for representing food with calories
-    and nutrients
-    AbstractFoodClass(name, cal, carb, prot, fat)
+    Abstract type for food
     """
-    def __init__(self, name ,cal, carb, prot, fat):
-        self.name = name
-        self.calories = cal
-        self.carbohydrates = carb
-        self.proteins = prot
-        self.fat = fat
-
+    
     def set_name(self, name):
         """
         Set food name
         """
-        self.name = name
+        self._name = name
 
     def set_calories(self, calories):
         """
         Set food calories to given number
         """
-        self.calories = calories
+        self._calories = calories
     
     def set_carbohydrates(self, carbohydrates):
         """
         Set food carbohydrates to given number
         """
-        self.carbohydrates = carbohydrates
+        self._carbohydrates = carbohydrates
     
     def set_proteins(self, proteins):
         """
         Set food proteins to given number
         """
-        self.proteins = proteins
+        self._proteins = proteins
     
     def set_fat(self, fat):
         """
         Set food fat to given number
         """
-        self.fat = fat
+        self._fat = fat
     
+    def __getitem__(self, value_name):
+        if f'_{value_name}' in self.__dir__():
+            return self.__getattribute__(f'_{value_name}')
+        else:
+            raise KeyError('Invalid argument')
+
+    def __setitem__(self, value_name, value):
+        if f'_{value_name}' in self.__dir__():
+            self.__setattr__(f'_{value_name}', value)
+        else:
+            raise KeyError('Invalid argument')
+
     def compare_values(self, other, value):
         """
         Compares given values of two food items
@@ -51,13 +55,20 @@ class AbstractFoodClass:
             return "Can't compare values"
 
     def __eq__(self, other):
+        """
+        Checks if two food items are the same
+        """
         if self is other:
             return True
         if type(self) == type(other):
-            return self.name == other.name and self.calories == other.calories and \
-                self.carbohydrates == other.carbohydrates and self.fat == other.fat\
-                and self.proteins == other.proteins
+            return self._name == other._name and self._calories == other._calories and \
+                self._carbohydrates == other._carbohydrates and self._fat == other._fat\
+                and self._proteins == other._proteins
     
     def __str__(self):
-        return f'{self.name} has {self.calories} calories, {self.carbohydrates}' +\
-        f'g. carbohydrates, {self.fat}g. of fat and {self.proteins}g. of proteins'
+        """
+        Returns string representation of food
+        """
+        return f'{self._name} has {self._calories} calories, {self._carbohydrates}' +\
+        f'g. carbohydrates, {self._fat}g. of fat and {self._proteins}g. of proteins'
+

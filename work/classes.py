@@ -1,42 +1,52 @@
-from abstract_class import AbstractFoodClass
+from abstract_class import AbstractFood
 
-class Recipe(AbstractFoodClass):
+class Recipe(AbstractFood):
     """
     Class for representing recipes with calories, 
     nutrients, ingredients and link to its source
     """
     def __init__(self, name, cal, carb, prot, fat, ingred, link):
-        super().__init__(name, cal, carb, prot, fat)
-        self.ingredients = ingred
-        self.link = link
+        self._name = name
+        self._calories = cal
+        self._carbohydrates = carb
+        self._proteins = prot
+        self._fat = fat
+        self._ingredients = ingred
+        self._link = link
     
     def __hash__(self):
-        return ord(self.name) + ord(self.calories) + ord(self.link) 
+        return ord(self._name) + ord(self._calories) + ord(self._link) 
     
     def add_ingredient(self, ingredient, value, units):
-        self.ingredients[ingredient] = (value, units)
+        self._ingredients[ingredient] = (value, units)
     
     def find_ingredient(self, ingredient):
-        return self.ingredients[ingredient]
+        if ingredient not in self._ingredients.keys():
+            raise KeyError('This recipe do not contain this ingredient')
+        return self._ingredients[ingredient]
 
-class Ingredient(AbstractFoodClass):
+class Ingredient(AbstractFood):
     """
     Class for representing ingredient with calories,
     nutrients and list of recipes it is used in
     """
     def __init__(self, name, cal, carb, prot, fat, recipes):
-        super().__init__(name, cal, carb, prot, fat)
-        self.recipes = set(recipes)
+        self._name = name
+        self._calories = cal
+        self._carbohydrates = carb
+        self._proteins = prot
+        self._fat = fat
+        self._recipes = set(recipes)
     
     def __hash__(self):
-        return ord(self.name) + ord(self.calories)
+        return ord(self._name) + ord(self._calories)
     
     def add_recipe(self, recipe):
-        self.recipes.add(recipe)
+        self._recipes.add(recipe)
     
     def calculate_total_amount(self):
         total = 0.0
-        for recipe in self.recipes:
+        for recipe in self._recipes:
             data = recipe.find_ingredient(self)
             total += data[0]
             unit = data[1]
