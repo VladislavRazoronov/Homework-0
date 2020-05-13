@@ -3,47 +3,17 @@ class AbstractFood:
     Abstract type for food
     """
     
-    def set_name(self, name):
-        """
-        Set food name
-        """
-        self._name = name
-
-    def set_calories(self, calories):
-        """
-        Set food calories to given number
-        """
-        self._calories = calories
-    
-    def set_carbohydrates(self, carbohydrates):
-        """
-        Set food carbohydrates to given number
-        """
-        self._carbohydrates = carbohydrates
-    
-    def set_proteins(self, proteins):
-        """
-        Set food proteins to given number
-        """
-        self._proteins = proteins
-    
-    def set_fat(self, fat):
-        """
-        Set food fat to given number
-        """
-        self._fat = fat
-    
     def __getitem__(self, value_name):
         if f'_{value_name}' in self.__dir__():
             return self.__getattribute__(f'_{value_name}')
         else:
-            raise KeyError('Invalid argument')
+            raise KeyError('Argument does not exist')
 
     def __setitem__(self, value_name, value):
         if f'_{value_name}' in self.__dir__():
             self.__setattr__(f'_{value_name}', value)
         else:
-            raise KeyError('Invalid argument')
+            raise KeyError('Argument does not exist')
 
     def compare_values(self, other, value):
         """
