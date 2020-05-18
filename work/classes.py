@@ -24,6 +24,8 @@ class Recipe(AbstractFood):
         if ingredient not in self._ingredients.keys():
             raise KeyError('This recipe do not contain this ingredient')
         return self._ingredients[ingredient]
+    
+    
 
 class Ingredient(AbstractFood):
     """
@@ -51,3 +53,6 @@ class Ingredient(AbstractFood):
             total += data[0]
             unit = data[1]
         return (total, unit)
+    
+    def __eq__(self, other):
+        return self._name == other._name

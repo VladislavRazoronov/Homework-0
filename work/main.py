@@ -1,11 +1,20 @@
 from data import get_data, parse_information
 from classes import Recipe, Ingredient
 
-def find_ingredients():
+def main():
+    recipes = find_recipes()
+    top_ingr = find_most_used(recipes)
+    print_results(top_ingr)
+
+def find_recipes():
+    """
+    Gets data about food from API
+    """
     while True:
         try:
             min_calories, max_calories = map(int, input('Please enter minimum'+\
             ' and maximum calories separated by space: ').split())
+            break
         except:
             print('Invalid format, please enter again')
     ingred = input('Please enter prefered ingredients, leave blank to'+\
@@ -29,7 +38,47 @@ def find_ingredients():
             ['Protein'],el[1]['Fat'],ingredients,el[3]))
         for ingr in ingredients:
             ingr[0].add_recipe(recipebook[-1])
+    return recipebook
+
+def find_max_dict_value(dictionary):
+    """
+    Finds max value item in dictionary and removes it
+    """
+    biggest = dictionary.keys()[0]
+    for key in dictionary.keys()[1:]:
+        if dictionary[key] > dictionary[biggest]:
+            biggest = key
+    res = (biggest, dictionary[biggest])
+    dictionary.pop(biggest)
+    return res
+
+def find_most_used(recipe_list):
+    """
+    Finds the most used ingredient
+    """
+    ingredient_amounts = {}
+    for recipe in recipe_list:
+        for ingr in recipe._ingredients.keys():
+            if ingr not in ingredient_amounts:
+                ingredient_amounts[ingr] = ingr.calculate_total_amount()
+            else:
+                ingredient_amounts[ingr] += ingr.calculate_total_amount()
+    while True:
+        try:
+            count = int(input('Please insert size of top list'))
+            break
+        except:
+            print('Variable must be integer')
+    results = []
+    for _ in range(count):
+        results.append(find_max_dict_value(ingredient_amounts))
+    return results
+
+def print_results(results):
+    print('№        Name        Value')
+    for i in range(len(results)):
+        print(f'{i+1}       {results[i][0]}     {results[i][1]}')
 
 
 if __name__ == "__main__":
-    find_ingredients()
+    main()
