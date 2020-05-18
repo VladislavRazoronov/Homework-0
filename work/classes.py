@@ -1,4 +1,4 @@
-from abstract_class import AbstractFood
+from abstract_type import AbstractFood
 
 class Recipe(AbstractFood):
     """

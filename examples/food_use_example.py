@@ -1,4 +1,4 @@
-from abstract_class import AbstractFood
+from abstract_type import AbstractFood
 
 class Burger(AbstractFood):
     def __init__(self, name, cal, carb, fat, prot):
