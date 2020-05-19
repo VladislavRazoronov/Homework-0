@@ -15,7 +15,12 @@ class Recipe(AbstractFood):
         self._link = link
     
     def __hash__(self):
-        return ord(self._name) + ord(self._calories) + ord(self._link) 
+        has = 0
+        for let in self._name:
+            has += ord(let)
+        for let in self._link:
+            has += ord(let)
+        return has
     
     def add_ingredient(self, ingredient, value, units):
         self._ingredients[ingredient] = (value, units)
@@ -28,7 +33,7 @@ class Recipe(AbstractFood):
     def __str__(self):
         st = ''
         for ingr in self._ingredients.keys():
-            st += f'{ingr._name}: {self._ingredients[ingr][0]} {self._ingredients[ingr][1]}'
+            st += f'{ingr._name}: {self._ingredients[ingr][0]} {self._ingredients[ingr][1]}\n'
         return f"The recipe {self._name} has {self._calories} calories." +\
             f"\n And contains such ingredients:\n {st} \n And here is its link: {self._link}"
     
@@ -48,7 +53,10 @@ class Ingredient(AbstractFood):
         self._recipes = set(recipes)
     
     def __hash__(self):
-        return ord(self._name) + ord(self._calories)
+        has = 0
+        for let in self._name:
+            has += ord(let)
+        return has
     
     def add_recipe(self, recipe):
         self._recipes.add(recipe)

@@ -19,11 +19,12 @@ def find_recipes():
         except:
             print('Invalid format, please enter again')
     ingred = input('Please enter prefered ingredients, leave blank to'+\
-    'search without selected ingredient')
+    ' search without selected ingredient:')
     if ingred == '':
         ingred = None
-    file = f'resources{max_calories}-{min_calories}.txt'
+    filename = f'resources{max_calories}-{min_calories}.txt'
     try:
+        assert os.path.exists(os.path.dirname(filename))
         recipes = parse_information(file)
     except:
         file = get_data(max_calories, min_calories, ingred)
@@ -38,15 +39,17 @@ def find_recipes():
         recipebook.append(Recipe(el[0],el[1]['Calories'],el[1]['Carbohydrates'],el[1]\
             ['Protein'],el[1]['Fat'],ingredients,el[3]))
         for ingr in ingredients:
-            ingr[0].add_recipe(recipebook[-1])
+            ingr.add_recipe(recipebook[-1])
     return recipebook
 
 def find_max_dict_value(dictionary):
     """
     Finds max value item in dictionary and removes it
     """
-    biggest = dictionary.keys()[0]
-    for key in dictionary.keys()[1:]:
+    for key in dictionary.keys():
+        biggest = key
+        break
+    for key in dictionary.keys():
         if dictionary[key] > dictionary[biggest]:
             biggest = key
     res = (biggest, dictionary[biggest])
@@ -61,13 +64,13 @@ def find_most_used(recipe_list):
     for recipe in recipe_list:
         for ingr in recipe._ingredients.keys():
             if ingr not in ingredient_amounts.keys():
-                ingredient_amounts[ingr] = (ingr.calculate_total_amount(), ingr._recipes)
+                ingredient_amounts[ingr] = [ingr.calculate_total_amount(), ingr._recipes]
             else:
                 ingredient_amounts[ingr][0] += ingr.calculate_total_amount()
                 ingredient_amounts[ingr][1].update(ingr._recipes)
     while True:
         try:
-            count = int(input('Please insert size of top list'))
+            count = int(input('Please insert size of top list:'))
             break
         except:
             print('Variable must be integer')
@@ -77,17 +80,20 @@ def find_most_used(recipe_list):
     return results
 
 def print_results(results):
+    """
+    Prints out a top list of ingredients and saves their recipes inspecific files
+    """
     print('№        Name        Value')
     for i in range(len(results)):
-        print(f'{i+1}       {results[i][0]}     {results[i][1][0]}')
-        if not os.path.exists(os.path.dirname(f'recipes/{results[i][0]}.txt')):
+        print(f'{i+1}       {results[i][0]._name}     {results[i][1][0]}')
+        if not os.path.exists(os.path.dirname(f'recipes/{results[i][0]._name}.txt')):
             try:
-                os.makedirs(os.path.dirname(f'recipes/{results[i][0]}.txt'))
+                os.makedirs(os.path.dirname(f'recipes/{results[i][0]._name}.txt'))
             except:
                 pass
-        with open(f'recipes/{results[i][0]}.txt', mode='w') as file:
+        with open(f'recipes/{results[i][0]._name}.txt', mode='w') as file:
             for rec in results[i][1][1]:
-                file.write(rec)
+                file.write(str(rec))
 
 
 if __name__ == "__main__":

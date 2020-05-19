@@ -3,24 +3,24 @@ import json
 
 def get_data(maxcal, mincal, ingredients=None):
     """
-    Recieves 100 recipes in given colories range that contain
+    Recieves 50 recipes in given colories range that contain
     complementary included ingredient, then writes down data into
     file and returns file name
     """
     api = spoonacular.API('738087f315ba454490f58e521168dcb7')
     if ingredients:
-        info = api.search_recipes_complex('', number=300, maxCalories=maxcal,\
+        info = api.search_recipes_complex('', number=20, maxCalories=maxcal,\
         minCalories=mincal, includeIngredients=ingredients, fillIngredients=True,\
         addRecipeNutrition=True, ignorePantry=True)
     else:
-        info = api.search_recipes_complex('', number=300, maxCalories=maxcal,\
-        minCalories=mincal, includeIngredients=ingredients, addRecipeNutrition=True,\
+        info = api.search_recipes_complex('', number=20, maxCalories=maxcal,\
+        minCalories=mincal, fillIngredients=True, addRecipeNutrition=True,\
         ignorePantry=True)
     data = info.json()
     js = json.dumps(data, indent=2)
-    with open(f'resources{maxcal}-{mincal}.txt', mode='w') as result:
+    with open(f'work/resources{maxcal}-{mincal}.txt', mode='w') as result:
         result.write(js)
-    return f'resources{maxcal}-{mincal}.txt'
+    return f'work/resources{maxcal}-{mincal}.txt'
 
 def parse_information(filepath):
     """
@@ -31,7 +31,7 @@ def parse_information(filepath):
         resource = json.load(file)['results']
     result = []
     for el in resource:
-        temp = el['nutrition']['nutrients']
+        temp = el['nutrition']
         nutrients = {}
         for nutrient in temp:
             if nutrient['title'] == 'Calories':
@@ -42,20 +42,20 @@ def parse_information(filepath):
                 nutrients['Carbohydrates'] = nutrient['amount']
             if nutrient['title'] == 'Protein':
                 nutrients['Protein'] = nutrient['amount']
-        ingredients = el['nutrition']['ingredients']
+        if 'Fat' not in nutrients.keys():
+            nutrients['Fat'] = None
+        if 'Carbohydrates' not in nutrients.keys():
+            nutrients['Carbohydrates'] = None
+        if 'Protein' not in nutrients.keys():
+            nutrients['Protein'] = None
+        ingredients = el['extendedIngredients']
         ingred = []
         for ingredient in ingredients:
-            temp = el['nutrients']
             ingr_nutrients = {}
-            for nutrient in temp:
-                if nutrient['title'] == 'Calories':
-                    ingr_nutrients['Calories'] = nutrient['amount']
-                elif nutrient['title'] == 'Fat':
-                    ingr_nutrients['Fat'] = nutrient['amount']
-                elif nutrient['title'] == 'Carbohydrates':
-                    ingr_nutrients['Carbohydrates'] = nutrient['amount']
-                elif nutrient['title'] == 'Protein':
-                    ingr_nutrients['Protein'] = nutrient['amount']
+            ingr_nutrients['Calories'] = None
+            ingr_nutrients['Fat'] = None
+            ingr_nutrients['Carbohydrates'] = None
+            ingr_nutrients['Protein'] = None
             ingred.append((ingredient['name'], ingredient['amount'], \
             ingredient['unit'], ingr_nutrients))
         result.append((el['title'], nutrients, ingred, el['sourceUrl']))
