@@ -9,11 +9,11 @@ def get_data(maxcal, mincal, ingredients=None):
     """
     api = spoonacular.API('738087f315ba454490f58e521168dcb7')
     if ingredients:
-        info = api.search_recipes_complex('', number=100, maxCalories=maxcal,\
+        info = api.search_recipes_complex('', number=300, maxCalories=maxcal,\
         minCalories=mincal, includeIngredients=ingredients, fillIngredients=True,\
         addRecipeNutrition=True, ignorePantry=True)
     else:
-        info = api.search_recipes_complex('', number=100, maxCalories=maxcal,\
+        info = api.search_recipes_complex('', number=300, maxCalories=maxcal,\
         minCalories=mincal, includeIngredients=ingredients, addRecipeNutrition=True,\
         ignorePantry=True)
     data = info.json()

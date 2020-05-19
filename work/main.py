@@ -1,5 +1,6 @@
 from data import get_data, parse_information
 from classes import Recipe, Ingredient
+import os
 
 def main():
     recipes = find_recipes()
@@ -59,10 +60,11 @@ def find_most_used(recipe_list):
     ingredient_amounts = {}
     for recipe in recipe_list:
         for ingr in recipe._ingredients.keys():
-            if ingr not in ingredient_amounts:
-                ingredient_amounts[ingr] = ingr.calculate_total_amount()
+            if ingr not in ingredient_amounts.keys():
+                ingredient_amounts[ingr] = (ingr.calculate_total_amount(), ingr._recipes)
             else:
-                ingredient_amounts[ingr] += ingr.calculate_total_amount()
+                ingredient_amounts[ingr][0] += ingr.calculate_total_amount()
+                ingredient_amounts[ingr][1].update(ingr._recipes)
     while True:
         try:
             count = int(input('Please insert size of top list'))
@@ -77,7 +79,15 @@ def find_most_used(recipe_list):
 def print_results(results):
     print('№        Name        Value')
     for i in range(len(results)):
-        print(f'{i+1}       {results[i][0]}     {results[i][1]}')
+        print(f'{i+1}       {results[i][0]}     {results[i][1][0]}')
+        if not os.path.exists(os.path.dirname(f'recipes/{results[i][0]}.txt')):
+            try:
+                os.makedirs(os.path.dirname(f'recipes/{results[i][0]}.txt'))
+            except:
+                pass
+        with open(f'recipes/{results[i][0]}.txt', mode='w') as file:
+            for rec in results[i][1][1]:
+                file.write(rec)
 
 
 if __name__ == "__main__":

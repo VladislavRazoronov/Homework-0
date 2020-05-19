@@ -25,6 +25,13 @@ class Recipe(AbstractFood):
             raise KeyError('This recipe do not contain this ingredient')
         return self._ingredients[ingredient]
     
+    def __str__(self):
+        st = ''
+        for ingr in self._ingredients.keys():
+            st += f'{ingr._name}: {self._ingredients[ingr][0]} {self._ingredients[ingr][1]}'
+        return f"The recipe {self._name} has {self._calories} calories." +\
+            f"\n And contains such ingredients:\n {st} \n And here is its link: {self._link}"
+    
     
 
 class Ingredient(AbstractFood):
